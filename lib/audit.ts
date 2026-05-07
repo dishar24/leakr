@@ -203,6 +203,10 @@ function evaluateTool(
     currentSpend: tool.monthlySpend,
   };
 
+  // 0. Check for pricing mismatch (user entered wrong price for known plans)
+  const pricingIssue = checkPricingMismatch(tool, input);
+  if (pricingIssue) return pricingIssue;
+
   // 1. Check if this tool is redundant
   if (redundantToolIds.has(tool.id)) {
     const group = redundancyGroups.find((g) => g.tools.includes(tool.id) && g.tools.length > 1);
@@ -235,14 +239,108 @@ function evaluateTool(
   const rightsizeFinding = checkRightsize(tool, input);
   if (rightsizeFinding) return rightsizeFinding;
 
-  // 4. Optimal
+  // 4. Optimal - provide specific reasoning based on context
   return {
     ...base,
     findingType: "optimal",
     recommendation: "No changes recommended — this spend looks right for your usage.",
     monthlySavings: 0,
-    reasoning: `${TOOL_NAMES[tool.id]} ${tool.plan} at $${tool.monthlySpend}/mo is appropriate for a team of ${input.teamSize} with ${input.useCase} as your primary use case.`,
+    reasoning: generateOptimalReasoning(tool, input),
   };
+}
+
+// ─── Pricing mismatch check ───────────────────────────────────────────────────
+
+function checkPricingMismatch(tool: ToolInput, input: FormInput): ToolFinding | null {
+  const { id, plan, monthlySpend } = tool;
+  const name = TOOL_NAMES[id];
+  
+  // Get official pricing for this tool/plan combo
+  const officialPrice = OFFICIAL_PRICING[id]?.[plan];
+  
+  // Skip API direct plans (variable pricing)
+  if (plan === "API direct" || officialPrice === undefined) return null;
+  
+  // For free/hobby plans, official price should be 0
+  if (officialPrice === 0 && monthlySpend > 0) {
+    return {
+      toolId: id,
+      toolName: name,
+      currentPlan: plan,
+      currentSpend: monthlySpend,
+      findingType: "overplan",
+      recommendation: `${name} ${plan} is free — you shouldn't be paying anything.`,
+      suggestedPlan: plan,
+      suggestedSpend: 0,
+      monthlySavings: monthlySpend,
+      reasoning: `${name} ${plan} plan is completely free. You entered $${monthlySpend}/mo, but the official price is $0. Either you're on a different plan, or there's a billing error. Verify your subscription.`,
+    };
+  }
+  
+  // For paid plans, check if user is overpaying significantly (>20% over official)
+  if (officialPrice > 0 && monthlySpend > officialPrice * 1.2) {
+    const expectedSpend = officialPrice * tool.seats;
+    if (monthlySpend > expectedSpend * 1.2) {
+      return {
+        toolId: id,
+        toolName: name,
+        currentPlan: plan,
+        currentSpend: monthlySpend,
+        findingType: "overplan",
+        recommendation: `Verify your ${name} billing — you're paying significantly more than the official ${plan} price.`,
+        suggestedPlan: plan,
+        suggestedSpend: expectedSpend,
+        monthlySavings: monthlySpend - expectedSpend,
+        reasoning: `${name} ${plan} officially costs $${officialPrice}/seat. For ${tool.seats} seat(s), you should pay ~$${expectedSpend}/mo, but you entered $${monthlySpend}/mo. Check for duplicate subscriptions, legacy pricing, or billing errors.`,
+      };
+    }
+  }
+  
+  return null;
+}
+
+// ─── Generate contextual optimal reasoning ────────────────────────────────────
+
+function generateOptimalReasoning(tool: ToolInput, input: FormInput): string {
+  const { id, plan, monthlySpend, seats } = tool;
+  const name = TOOL_NAMES[id];
+  const { teamSize, useCase } = input;
+  
+  // Coding tools
+  if (id === "cursor" || id === "github_copilot" || id === "windsurf") {
+    if (useCase === "coding" || useCase === "mixed") {
+      if (seats === teamSize) {
+        return `${name} ${plan} at $${monthlySpend}/mo covers your entire ${teamSize}-person dev team. The plan tier matches your team size and coding-focused workflow — no obvious waste here.`;
+      } else if (seats < teamSize) {
+        return `${name} ${plan} for ${seats}/${teamSize} developers at $${monthlySpend}/mo. Partial coverage is intentional — you're likely equipping your most active coders. Spend looks deliberate.`;
+      } else {
+        return `${name} ${plan} at $${monthlySpend}/mo for ${seats} seat(s). Your team size is ${teamSize}, so you have extra capacity — but if contractors or future hires are planned, this is fine.`;
+      }
+    }
+  }
+  
+  // Chat tools
+  if (id === "claude" || id === "chatgpt" || id === "gemini") {
+    if (plan.includes("Pro") || plan.includes("Plus") || plan.includes("Max")) {
+      return `${name} ${plan} at $${monthlySpend}/mo for individual power users. This tier makes sense if you're hitting usage limits regularly on ${useCase} tasks. No cheaper alternative delivers the same capacity.`;
+    } else if (plan.includes("Team")) {
+      return `${name} ${plan} at $${monthlySpend}/mo for ${seats} seat(s). Team plans add collaboration features and higher limits — appropriate for ${teamSize}-person teams doing ${useCase} work at scale.`;
+    } else if (plan === "Free") {
+      return `${name} Free plan — you're not paying anything, so there's nothing to optimize. If you hit limits, consider upgrading, but for now this is perfect.`;
+    }
+  }
+  
+  // API plans
+  if (plan === "API direct") {
+    return `${name} API at $${monthlySpend}/mo. API spend is usage-based and hard to optimize without knowing your traffic patterns. If this is production load, it's likely appropriate. Monitor for unexpected spikes.`;
+  }
+  
+  // Generic fallback with actual context
+  if (monthlySpend === 0) {
+    return `${name} ${plan} is free. No spend to optimize — you're getting full value at zero cost.`;
+  }
+  
+  return `${name} ${plan} at $${monthlySpend}/mo aligns with your ${teamSize}-person team's ${useCase} workflow. The plan tier and seat count match your stated usage — no clear downgrade path without losing capability.`;
 }
 
 // ─── Overplan check ───────────────────────────────────────────────────────────

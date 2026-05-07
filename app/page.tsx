@@ -126,33 +126,40 @@ export default function Home() {
   if (!loaded) return null;
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-[#0a0e1a]">
       {/* Nav */}
-      <nav className="border-b border-zinc-100 px-6 py-4 flex items-center justify-between">
-        <span className="text-base font-medium tracking-tight text-zinc-900">
-          leakr
-        </span>
-        <span className="text-xs text-zinc-400">
-          find where your AI budget bleeds
+      <nav className="border-b border-white/10 backdrop-blur-sm bg-[#0a0e1a]/80 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+        <div className="flex items-center gap-3">
+          <div className="w-7 h-7 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-lg flex items-center justify-center glow-green-sm">
+            <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
+            </svg>
+          </div>
+          <span className="text-lg font-bold tracking-tight text-white">
+            leakr
+          </span>
+        </div>
+        <span className="text-xs text-slate-400 font-medium">
+          Find where your AI budget bleeds
         </span>
       </nav>
 
-      <div className="max-w-2xl mx-auto px-6 py-12">
+      <div className="max-w-4xl mx-auto px-6 py-12">
         {/* Header */}
-        <div className="mb-10">
-          <h1 className="text-2xl font-medium text-zinc-900 mb-2">
-            audit your AI stack
+        <div className="mb-12">
+          <h1 className="text-4xl font-bold text-white mb-3 leading-tight">
+            Audit your AI stack
           </h1>
-          <p className="text-sm text-zinc-500 leading-relaxed">
-            select every tool you pay for. we&apos;ll find the waste, the
+          <p className="text-base text-slate-400 leading-relaxed">
+            Select every tool you pay for. We&apos;ll find the waste, the
             redundancies, and what to cut.
           </p>
         </div>
 
         {/* Tools */}
-        <div className="space-y-3 mb-10">
-          <p className="text-xs uppercase tracking-widest text-zinc-400 mb-4">
-            your tools
+        <div className="space-y-3 mb-12">
+          <p className="text-xs uppercase tracking-widest text-slate-500 font-semibold mb-5">
+            Your Tools
           </p>
 
           {TOOLS.map((tool) => {
@@ -160,30 +167,30 @@ export default function Home() {
             return (
               <div
                 key={tool.id}
-                className={`border rounded-xl transition-all duration-150 ${
+                className={`rounded-xl transition-all duration-200 ${
                   entry.enabled
-                    ? "border-zinc-300 bg-white"
-                    : "border-zinc-100 bg-zinc-50"
+                    ? "glass-card-hover glow-green-sm"
+                    : "glass-card hover:border-white/20"
                 }`}
               >
                 {/* Tool header row */}
                 <div
-                  className="flex items-center justify-between px-4 py-3 cursor-pointer select-none"
+                  className="flex items-center justify-between px-5 py-4 cursor-pointer select-none"
                   onClick={() =>
                     setToolField(tool.id, "enabled", !entry.enabled)
                   }
                 >
                   <div className="flex items-center gap-3">
                     <div
-                      className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
+                      className={`w-5 h-5 rounded border flex items-center justify-center transition-all ${
                         entry.enabled
-                          ? "bg-zinc-900 border-zinc-900"
-                          : "border-zinc-300 bg-white"
+                          ? "bg-emerald-500 border-emerald-500 glow-green-sm"
+                          : "border-slate-600 bg-slate-800/50"
                       }`}
                     >
                       {entry.enabled && (
                         <svg
-                          className="w-2.5 h-2.5 text-white"
+                          className="w-3 h-3 text-white"
                           fill="none"
                           viewBox="0 0 10 10"
                         >
@@ -198,15 +205,15 @@ export default function Home() {
                       )}
                     </div>
                     <span
-                      className={`text-sm font-medium ${
-                        entry.enabled ? "text-zinc-900" : "text-zinc-400"
+                      className={`text-sm font-semibold ${
+                        entry.enabled ? "text-white" : "text-slate-400"
                       }`}
                     >
                       {tool.name}
                     </span>
                   </div>
                   {entry.enabled && entry.monthlySpend && (
-                    <span className="text-xs text-zinc-400">
+                    <span className="text-sm font-bold text-emerald-400">
                       ${entry.monthlySpend}/mo
                     </span>
                   )}
@@ -214,16 +221,16 @@ export default function Home() {
 
                 {/* Expanded fields */}
                 {entry.enabled && (
-                  <div className="px-4 pb-4 grid grid-cols-3 gap-3 border-t border-zinc-100 pt-3">
+                  <div className="px-5 pb-5 grid grid-cols-3 gap-3 border-t border-white/10 pt-4">
                     {/* Plan */}
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs text-zinc-400">plan</label>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs text-slate-400 font-medium uppercase tracking-wider">Plan</label>
                       <select
                         value={entry.plan}
                         onChange={(e) =>
                           setToolField(tool.id, "plan", e.target.value)
                         }
-                        className="text-sm border border-zinc-200 rounded-lg px-3 py-2 bg-white text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-400"
+                        className="text-sm border border-white/10 rounded-lg px-3 py-2.5 bg-slate-800/50 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
                       >
                         {tool.plans.map((p) => (
                           <option key={p} value={p}>
@@ -234,8 +241,8 @@ export default function Home() {
                     </div>
 
                     {/* Seats */}
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs text-zinc-400">seats</label>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs text-slate-400 font-medium uppercase tracking-wider">Seats</label>
                       <input
                         type="number"
                         min="1"
@@ -244,14 +251,14 @@ export default function Home() {
                           setToolField(tool.id, "seats", e.target.value)
                         }
                         placeholder="1"
-                        className="text-sm border border-zinc-200 rounded-lg px-3 py-2 bg-white text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-400"
+                        className="text-sm border border-white/10 rounded-lg px-3 py-2.5 bg-slate-800/50 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
                       />
                     </div>
 
                     {/* Monthly spend */}
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs text-zinc-400">
-                        monthly spend ($)
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs text-slate-400 font-medium uppercase tracking-wider">
+                        Monthly ($)
                       </label>
                       <input
                         type="number"
@@ -265,7 +272,7 @@ export default function Home() {
                           )
                         }
                         placeholder="0"
-                        className="text-sm border border-zinc-200 rounded-lg px-3 py-2 bg-white text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-400"
+                        className="text-sm border border-white/10 rounded-lg px-3 py-2.5 bg-slate-800/50 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
                       />
                     </div>
                   </div>
@@ -276,13 +283,13 @@ export default function Home() {
         </div>
 
         {/* Team info */}
-        <div className="mb-10">
-          <p className="text-xs uppercase tracking-widest text-zinc-400 mb-4">
-            your team
+        <div className="mb-12">
+          <p className="text-xs uppercase tracking-widest text-slate-500 font-semibold mb-5">
+            Your Team
           </p>
           <div className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs text-zinc-500">team size</label>
+            <div className="flex flex-col gap-2">
+              <label className="text-xs text-slate-400 font-medium uppercase tracking-wider">Team Size</label>
               <input
                 type="number"
                 min="1"
@@ -291,18 +298,18 @@ export default function Home() {
                   setForm((prev) => ({ ...prev, teamSize: e.target.value }))
                 }
                 placeholder="e.g. 8"
-                className="text-sm border border-zinc-200 rounded-lg px-3 py-2.5 bg-white text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-400"
+                className="text-sm border border-white/10 rounded-lg px-4 py-3 bg-slate-800/50 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
               />
             </div>
 
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs text-zinc-500">primary use case</label>
+            <div className="flex flex-col gap-2">
+              <label className="text-xs text-slate-400 font-medium uppercase tracking-wider">Primary Use Case</label>
               <select
                 value={form.useCase}
                 onChange={(e) =>
                   setForm((prev) => ({ ...prev, useCase: e.target.value }))
                 }
-                className="text-sm border border-zinc-200 rounded-lg px-3 py-2.5 bg-white text-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-400"
+                className="text-sm border border-white/10 rounded-lg px-4 py-3 bg-slate-800/50 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all"
               >
                 {USE_CASES.map((uc) => (
                   <option key={uc} value={uc}>
@@ -318,20 +325,20 @@ export default function Home() {
         <button
           onClick={handleSubmit}
           disabled={!canSubmit}
-          className={`w-full py-3 rounded-xl text-sm font-medium transition-all ${
+          className={`w-full py-4 rounded-xl text-sm font-bold transition-all ${
             canSubmit
-              ? "bg-zinc-900 text-white hover:bg-zinc-700 cursor-pointer"
-              : "bg-zinc-100 text-zinc-400 cursor-not-allowed"
+              ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white hover:from-emerald-600 hover:to-emerald-700 glow-green cursor-pointer"
+              : "bg-slate-800/50 text-slate-500 cursor-not-allowed border border-white/10"
           }`}
         >
           {canSubmit
-            ? `run audit on ${enabledCount} tool${enabledCount !== 1 ? "s" : ""} →`
-            : "select at least one tool to continue"}
+            ? `Run Audit on ${enabledCount} Tool${enabledCount !== 1 ? "s" : ""} →`
+            : "Select at least one tool to continue"}
         </button>
 
         {enabledCount > 0 && (
-          <p className="text-xs text-zinc-400 text-center mt-3">
-            form auto-saved · no account needed
+          <p className="text-xs text-slate-500 text-center mt-4 font-medium">
+            Form auto-saved · No account needed
           </p>
         )}
       </div>

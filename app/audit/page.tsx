@@ -4,6 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuditResult } from "@/lib/audit";
 
+type FullResult = AuditResult & { 
+  aiSummary: string; 
+  shareId: string | null 
+};
+
 const STORAGE_KEY = "leakr_form_state";
 
 const BADGE_STYLES: Record<string, string> = {
@@ -22,7 +27,8 @@ const BADGE_LABELS: Record<string, string> = {
 
 export default function AuditPage() {
   const router = useRouter();
-  const [result, setResult] = useState<AuditResult | null>(null);
+  const [result, setResult] = useState<FullResult | null>(null);
+const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -55,7 +61,7 @@ export default function AuditPage() {
         });
 
         if (!res.ok) throw new Error("Audit request failed");
-        const data: AuditResult = await res.json();
+        const data: FullResult = await res.json();
         setResult(data);
       } catch (e) {
         setError("Something went wrong running your audit.");
@@ -145,6 +151,16 @@ export default function AuditPage() {
             </div>
           )}
         </div>
+        {result.aiSummary && (
+  <div className="glass-card rounded-2xl p-6 mb-8">
+    <p className="text-xs uppercase tracking-widest text-slate-500 font-semibold mb-3">
+      AI ANALYSIS
+    </p>
+    <p className="text-sm text-slate-300 leading-relaxed">
+      {result.aiSummary}
+    </p>
+  </div>
+)}
 
         {/* Overlaps/Redundancy Card - High Priority */}
         {result.redundancyGroups.length > 0 && (
@@ -282,15 +298,16 @@ export default function AuditPage() {
           </button>
           <button
             onClick={() => {
-              if (navigator.share) {
-                navigator.share({ title: "Leakr audit", url: window.location.href });
-              } else {
-                navigator.clipboard.writeText(window.location.href);
-              }
-            }}
+  const url = result?.shareId
+    ? `${window.location.origin}/share/${result.shareId}`
+    : window.location.href;
+  navigator.clipboard.writeText(url);
+  setCopied(true);
+  setTimeout(() => setCopied(false), 2000);
+}}
             className="flex-1 py-3.5 text-sm border border-white/10 rounded-xl text-slate-300 hover:bg-slate-800/50 transition-all font-semibold"
           >
-            Share Audit →
+            {copied ? "Link Copied ✓" : "Share Audit →"}
           </button>
         </div>
       </div>

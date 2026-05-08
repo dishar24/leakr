@@ -11,3 +11,31 @@
 **What I learned:** AI pricing models change frequently, so pricing validation and separation of logic/UI are important.
 **Blockers / what I'm stuck on:** Need database integration and better analytics visuals.
 **Plan for tomorrow:** Add Supabase shareable audit URLs and continue UI polish.
+
+
+## Day 3 — 2026-05-08
+
+**Hours worked:** ~2-3h
+
+**What I did:**
+- Added Groq AI summaries
+- Connected Supabase storage
+- Built shareable audit pages
+- Added share/copy audit feature
+- Improved audit UI
+
+**What I learned:**
+- Dynamic routes in Next.js
+- Env variable setup
+- Git commit workflow
+- API debugging
+
+**Blockers:**
+- `.env.local` setup
+- Share route issues
+- Git push conflicts
+
+**Plan for tomorrow:**
+- Build lead capture form
+- Add Resend transactional email
+- Improve onboarding flow

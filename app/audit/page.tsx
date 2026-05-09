@@ -1,5 +1,5 @@
 "use client";
-
+import LeadCaptureModal from "@/components/ui/LeadCaptureModal";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuditResult } from "@/lib/audit";
@@ -31,6 +31,8 @@ export default function AuditPage() {
 const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
+
 
   useEffect(() => {
     async function fetchAudit() {
@@ -72,6 +74,12 @@ const [copied, setCopied] = useState(false);
 
     fetchAudit();
   }, [router]);
+  useEffect(() => {
+  if (result) {
+    const timer = setTimeout(() => setShowModal(true), 3000);
+    return () => clearTimeout(timer);
+  }
+}, [result]);
 
   if (loading) {
     return (
@@ -311,6 +319,13 @@ const [copied, setCopied] = useState(false);
           </button>
         </div>
       </div>
+      {showModal && (
+  <LeadCaptureModal
+    onClose={() => setShowModal(false)}
+    monthlySavings={result.totalMonthlySavings}
+    shareId={result.shareId}
+  />
+)}
     </main>
   );
 }

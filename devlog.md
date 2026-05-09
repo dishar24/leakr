@@ -39,3 +39,19 @@
 - Build lead capture form
 - Add Resend transactional email
 - Improve onboarding flow
+
+# Day 4 — 2026-05-09
+
+**Hours worked:** 2h
+
+**What I did:**  
+Built lead capture modal that appears after audit results load (value first, ask second flow). Added POST `/api/leads` endpoint with honeypot abuse protection, in-memory rate limiting (3 req/min/IP), Supabase lead storage, and Resend transactional email integration. Wired modal into audit results page and tested successful lead submission flow locally.
+
+**What I learned:**  
+Learned how Next.js API routes work with POST requests, how to connect Supabase + Resend into a production-style flow, and how lead funnels are implemented in SaaS products. Also learned debugging around API routes, environment variables, and external service integration.
+
+**Blockers:**  
+Resend emails initially failed due to incorrect API route placement and Supabase URL typo. Fixed routing structure and environment config issues after debugging terminal logs.
+
+**Plan for tomorrow:**  
+Set up GitHub Actions CI, deploy to Vercel, configure production environment variables, test live lead flow, and run Lighthouse audit.

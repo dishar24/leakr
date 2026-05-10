@@ -4,13 +4,14 @@ import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
 import SharePageClient from "./SharePageClient";
 
-type Props = { params: { id: string } };
+type Props = { params: Promise<{ id: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
   const { data } = await supabase
     .from("audits")
     .select("total_monthly_savings, total_current_spend")
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (!data) return { title: "Leakr — AI Spend Audit" };
@@ -37,10 +38,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function SharePage({ params }: Props) {
+  const { id } = await params;
   const { data, error } = await supabase
     .from("audits")
     .select("audit_result, ai_summary, total_monthly_savings, total_current_spend, created_at")
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (error || !data) notFound();

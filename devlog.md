@@ -55,3 +55,15 @@ Resend emails initially failed due to incorrect API route placement and Supabase
 
 **Plan for tomorrow:**  
 Set up GitHub Actions CI, deploy to Vercel, configure production environment variables, test live lead flow, and run Lighthouse audit.
+
+## Day 5 — 2026-05-10
+
+**Hours worked:** 4.5h
+
+**What I did:** Fixed all lint errors by adding proper TypeScript types and removing unused variables. Deployed to Vercel with all environment variables. Debugged Supabase 403 error — fixed by disabling RLS on audits and leads tables. Fixed share page 404 by awaiting params in Next.js 14 App Router. Added vitest to devDependencies so CI could find the test runner. Set up GitHub Actions CI — lint + tests now run on every push to main, showing green. Ran Lighthouse on deployed URL: Performance 88, Accessibility 96, Best Practices 100, SEO 100 — all passing credex requirements.
+
+**What I learned:** Next.js 14 App Router requires params to be awaited in server components — params is now a Promise, not a plain object. Supabase RLS blocks all requests by default even with correct keys. Resend free tier only delivers to verified domain owner email.
+
+**Blockers / what I'm stuck on:** Resend email only delivers to my own registered email on free tier — noted as MVP tradeoff, full delivery needs custom domain in production.
+
+**Plan for tomorrow:** Write all entrepreneurial files (GTM, ECONOMICS, USER_INTERVIEWS, LANDING_COPY, METRICS, REFLECTION, ARCHITECTURE, README) and submit.

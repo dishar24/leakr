@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: `Leakr found $${savings}/mo in AI waste`,
       description: `$${current}/mo current spend → $${current - savings}/mo optimised. Full audit breakdown inside.`,
-      url: `https://leakr.vercel.app/share/${params.id}`,
+      url: `https://leakr.vercel.app/share/${id}`,
       siteName: "Leakr",
       type: "website",
     },

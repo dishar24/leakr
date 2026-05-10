@@ -3,6 +3,8 @@
 // src/app/share/[id]/SharePageClient.tsx
 import { useRouter } from "next/navigation";
 
+import { AuditResult } from "@/lib/audit";
+
 const BADGE: Record<string, string> = {
   redundant: "bg-red-500/15 text-red-400 border border-red-500/20",
   overplan: "bg-orange-500/15 text-orange-400 border border-orange-500/20",
@@ -10,7 +12,12 @@ const BADGE: Record<string, string> = {
   optimal: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/20",
 };
 
-export default function SharePageClient({ result }: { result: any }) {
+type ShareResult = AuditResult & {
+  aiSummary?: string;
+  totalAnnualSavings: number;
+};
+
+export default function SharePageClient({ result }: { result: ShareResult }) {
   const router = useRouter();
   const fmt = (n: number) =>
     n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
@@ -21,7 +28,7 @@ export default function SharePageClient({ result }: { result: any }) {
         <button onClick={() => router.push("/")} className="text-lg font-semibold tracking-tight">
           leakr
         </button>
-        <span className="text-xs text-zinc-600">find where your AI budget bleeds</span>
+        <span className="text-xs text-slate-300 font-semibold">find where your AI budget bleeds</span>
       </nav>
 
       <div className="max-w-2xl mx-auto px-6 py-12">
@@ -40,7 +47,7 @@ export default function SharePageClient({ result }: { result: any }) {
                 <span className="text-emerald-400">{fmt(result.totalMonthlySavings)}/mo</span>
               </h1>
               <p className="text-sm text-zinc-400">
-                that's{" "}
+                that&apos;s{" "}
                 <span className="text-white font-medium">{fmt(result.totalAnnualSavings)}/year</span>
               </p>
             </>
@@ -61,7 +68,7 @@ export default function SharePageClient({ result }: { result: any }) {
         <div className="mb-10">
           <p className="text-xs uppercase tracking-widest text-zinc-600 mb-4">per-tool breakdown</p>
           <div className="border border-white/5 rounded-xl overflow-hidden divide-y divide-white/5">
-            {result.findings.map((f: any) => (
+            {result.findings.map((f) => (
               <div key={f.toolId} className="px-5 py-4 flex items-start justify-between gap-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">

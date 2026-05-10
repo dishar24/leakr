@@ -82,11 +82,20 @@ export default function Home() {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) setForm(JSON.parse(saved));
-    } catch {}
-    setLoaded(true);
+    const loadSavedForm = () => {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsedForm = JSON.parse(saved);
+          setForm(parsedForm);
+        }
+      } catch {
+        // Ignore parse errors
+      }
+      setLoaded(true);
+    };
+    
+    loadSavedForm();
   }, []);
 
   useEffect(() => {
@@ -139,7 +148,7 @@ export default function Home() {
             leakr
           </span>
         </div>
-        <span className="text-xs text-slate-400 font-medium">
+        <span className="text-base text-slate-400 font-semibold">
           Find where your AI budget bleeds
         </span>
       </nav>

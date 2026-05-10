@@ -44,13 +44,16 @@ const [copied, setCopied] = useState(false);
 
         // Transform localStorage format → API format
         const tools = Object.entries(formState.tools)
-          .filter(([, v]: [string, any]) => v.enabled)
-          .map(([id, v]: [string, any]) => ({
-            id,
-            plan: v.plan,
-            seats: parseInt(v.seats) || 1,
-            monthlySpend: parseFloat(v.monthlySpend) || 0,
-          }));
+          .filter(([, v]: [string, unknown]) => (v as { enabled: boolean }).enabled)
+          .map(([id, v]: [string, unknown]) => {
+            const tool = v as { plan: string; seats: string; monthlySpend: string };
+            return {
+              id,
+              plan: tool.plan,
+              seats: parseInt(tool.seats) || 1,
+              monthlySpend: parseFloat(tool.monthlySpend) || 0,
+            };
+          });
 
         const res = await fetch("/api/audit", {
           method: "POST",
@@ -65,7 +68,7 @@ const [copied, setCopied] = useState(false);
         if (!res.ok) throw new Error("Audit request failed");
         const data: FullResult = await res.json();
         setResult(data);
-      } catch (e) {
+      } catch {
         setError("Something went wrong running your audit.");
       } finally {
         setLoading(false);
@@ -119,7 +122,7 @@ const [copied, setCopied] = useState(false);
           </div>
           <span className="text-lg font-bold tracking-tight text-white">leakr</span>
         </button>
-        <span className="text-xs text-slate-400 font-medium">Find where your AI budget bleeds</span>
+        <span className="text-xs text-slate-400 font-semibold">Find where your AI budget bleeds</span>
       </nav>
 
       <div className="max-w-6xl mx-auto px-6 py-12">

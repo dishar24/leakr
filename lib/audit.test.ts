@@ -1,5 +1,5 @@
 // src/lib/audit.test.ts
-import { describe, test, expect } from "vitest";
+import { test, expect } from "vitest";
 import { runAudit, FormInput } from "./audit";
 
 // ─── Test 1: Redundancy detection — coding tools ──────────────────────────────

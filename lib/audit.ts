@@ -251,7 +251,7 @@ function evaluateTool(
 
 // ─── Pricing mismatch check ───────────────────────────────────────────────────
 
-function checkPricingMismatch(tool: ToolInput, input: FormInput): ToolFinding | null {
+function checkPricingMismatch(tool: ToolInput, _input: FormInput): ToolFinding | null {
   const { id, plan, monthlySpend } = tool;
   const name = TOOL_NAMES[id];
   

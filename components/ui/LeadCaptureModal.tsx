@@ -47,8 +47,9 @@ export default function LeadCaptureModal({ onClose, monthlySavings, shareId }: P
       }
 
       setDone(true);
-    } catch (err: any) {
-      setError(err.message || "Failed to submit. Please try again.");
+    } catch (err) {
+      const error = err as Error;
+      setError(error.message || "Failed to submit. Please try again.");
     } finally {
       setLoading(false);
     }

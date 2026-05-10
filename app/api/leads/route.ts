@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
       n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
 
     await resend.emails.send({
-      from: "Leakr <hello@leakr.ai>", // update with your verified domain
+      from: "Leakr <onboarding@resend.dev>", // update with your verified domain
       to: email,
       subject: isHighValue
         ? `Your Leakr audit — ${fmt(monthlySavings)}/mo in savings found`

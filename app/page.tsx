@@ -233,8 +233,10 @@ export default function Home() {
                   <div className="px-5 pb-5 grid grid-cols-3 gap-3 border-t border-white/10 pt-4">
                     {/* Plan */}
                     <div className="flex flex-col gap-2">
-                      <label className="text-xs text-slate-400 font-medium uppercase tracking-wider">Plan</label>
+                      <label htmlFor={`plan-${tool.id}`} className="text-xs text-slate-400 font-medium uppercase tracking-wider">Plan</label>
                       <select
+                        id={`plan-${tool.id}`}
+                        name={`plan-${tool.id}`}
                         value={entry.plan}
                         onChange={(e) =>
                           setToolField(tool.id, "plan", e.target.value)
@@ -251,8 +253,10 @@ export default function Home() {
 
                     {/* Seats */}
                     <div className="flex flex-col gap-2">
-                      <label className="text-xs text-slate-400 font-medium uppercase tracking-wider">Seats</label>
+                      <label htmlFor={`seats-${tool.id}`} className="text-xs text-slate-400 font-medium uppercase tracking-wider">Seats</label>
                       <input
+                        id={`seats-${tool.id}`}
+                        name={`seats-${tool.id}`}
                         type="number"
                         min="1"
                         value={entry.seats}
@@ -266,10 +270,12 @@ export default function Home() {
 
                     {/* Monthly spend */}
                     <div className="flex flex-col gap-2">
-                      <label className="text-xs text-slate-400 font-medium uppercase tracking-wider">
+                      <label htmlFor={`monthlySpend-${tool.id}`} className="text-xs text-slate-400 font-medium uppercase tracking-wider">
                         Monthly ($)
                       </label>
                       <input
+                        id={`monthlySpend-${tool.id}`}
+                        name={`monthlySpend-${tool.id}`}
                         type="number"
                         min="0"
                         value={entry.monthlySpend}
@@ -298,8 +304,10 @@ export default function Home() {
           </p>
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
-              <label className="text-xs text-slate-400 font-medium uppercase tracking-wider">Team Size</label>
+              <label htmlFor="teamSize" className="text-xs text-slate-400 font-medium uppercase tracking-wider">Team Size</label>
               <input
+                id="teamSize"
+                name="teamSize"
                 type="number"
                 min="1"
                 value={form.teamSize}
@@ -312,8 +320,10 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-xs text-slate-400 font-medium uppercase tracking-wider">Primary Use Case</label>
+              <label htmlFor="useCase" className="text-xs text-slate-400 font-medium uppercase tracking-wider">Primary Use Case</label>
               <select
+                id="useCase"
+                name="useCase"
                 value={form.useCase}
                 onChange={(e) =>
                   setForm((prev) => ({ ...prev, useCase: e.target.value }))

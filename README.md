@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Leakr — find where your AI budget bleeds
 
-## Getting Started
+Leakr is a free AI spend audit tool for startup founders and engineering managers. You input what AI tools your team pays for, and Leakr surfaces redundancies, overplans, and exact savings — with the math to back it up.
 
-First, run the development server:
+**Live:** https://leakr-chi.vercel.app  
+**Built for:** Credex Web Development Intern Assignment — Round 1
+
+---
+
+## Demo
+
+Loom walkthrough: https://www.loom.com/share/8c0aea92a7d04329bbb9e8dce68fe106
+
+---
+
+## Quick Start
+
+### Run locally
+
+```bash
+git clone https://github.com/dishar24/leakr.git
+cd leakr
+npm install
+```
+
+Create `.env.local`:
+```
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+SUPABASE_ANON_KEY=your_supabase_anon_key
+GROQ_API_KEY=your_groq_key
+RESEND_API_KEY=your_resend_key
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Run tests
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm test
+```
 
-## Learn More
+### Deploy
 
-To learn more about Next.js, take a look at the following resources:
+Push to `main` → Vercel auto-deploys. Add environment variables in Vercel dashboard under Settings → Environment Variables.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Decisions
 
-## Deploy on Vercel
+**1. Hardcoded audit rules, not AI**
+The audit engine (`src/lib/audit.ts`) uses hardcoded logic — not an LLM — to evaluate tool spend. This was intentional. AI-generated financial recommendations are unpredictable and hard to verify. A finance person should be able to read the reasoning and agree with it. Hardcoded rules with cited pricing data are more defensible than LLM output for this use case. AI is used only for the summary paragraph, where creativity adds value without risking bad math.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**2. Dark UI over white minimal**
+Started with a white minimal design (Linear-esque). Switched to dark after seeing it in the browser — the hero savings number didn't have emotional impact on white. The product moment ("you're wasting $480/month") deserved a UI that matched its weight. Dark background with emerald accents made the savings number hit harder.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**3. Next.js over React + Vite**
+Next.js gave us API routes (no separate Express server), server-side rendering for OG tags on the share page, and zero-config Vercel deployment. The share page's rich link previews require server-side meta tag generation — this would have been significantly more complex with a pure client-side React app.
+
+**4. Supabase over Firebase**
+Supabase gives us a proper PostgreSQL database with UUID primary keys and a clean REST client. Firebase's document model would have made the audit result structure harder to query. UUID primary keys for shareable URLs mean IDs can't be sequentially enumerated.
+
+**5. Modal for lead capture, not a separate page**
+The assignment required email captured after value is shown, never before. A modal with a 3-second delay after the results page loads ensures the user sees their savings number first. A separate page would have broken the flow and felt like a gate.

@@ -67,3 +67,19 @@ Set up GitHub Actions CI, deploy to Vercel, configure production environment var
 **Blockers / what I'm stuck on:** Resend email only delivers to my own registered email on free tier — noted as MVP tradeoff, full delivery needs custom domain in production.
 
 **Plan for tomorrow:** Write all entrepreneurial files (GTM, ECONOMICS, USER_INTERVIEWS, LANDING_COPY, METRICS, REFLECTION, ARCHITECTURE, README) and submit.
+
+## Day 6 — 2026-05-11
+
+**Hours worked:** 5
+
+**What I did:**  
+Finished most of the non-code deliverables for the assignment. Wrote ECONOMICS.md, GTM.md, METRICS.md, LANDING_COPY.md, and updated README.md with deployment instructions and decisions/tradeoffs. Recorded a short Loom walkthrough showing the full audit flow, lead capture modal, and shared audit URL. Also cleaned up the repo structure so all required markdown files are at the repo root.
+
+**What I learned:**  
+The entrepreneurial/documentation side of the project took longer than expected. Writing realistic GTM and economics assumptions was harder than writing the actual UI. I also learned that showing tradeoffs and limitations honestly makes the project feel more believable than pretending everything is production-perfect.
+
+**Blockers / what I'm stuck on:**  
+Resend free tier only allows sending emails to verified addresses, so the transactional email demo flow is limited during testing. Documented this limitation in the repo instead of trying to hack around it.
+
+
+
